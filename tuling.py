@@ -3,6 +3,7 @@
 __author__ = 'wenbin'
 
 import requests
+import json
 import constants
 
 def ai_search_V1(msg,puid):
@@ -19,35 +20,22 @@ def ai_search_V1(msg,puid):
 
 def ai_search_V2(msg,puid):
 
-    data = {
-        "reqType":0,
-        "perception": {
-            "inputText": {
+    inputText = {
                 "text": msg
-            },
-            "inputImage": {
-                "url": ""
-            },
-            "inputMedia": {
-                "url": ""
-            },
-            "selfInfo": {
-                "location": {
-                    "city": "北京",
-                    "province": "北京",
-                    "street": "信息路"
-                }
             }
-        },
-        "userInfo": {
+
+    userInfo = {
             "apiKey": constants.TULING_TOKEN,
             "userId": puid
         }
+
+    data = {
+        "reqType":0,
+        "perception": {
+            "inputText": inputText
+        },
+        "userInfo": userInfo
     }
 
-    res = requests.post(constants.TULING_API_V2,data=data).json()
-
-    print(data)
-    print(res)
-
+    res = requests.post(constants.TULING_API_V2,data=json.dumps(data)).json()
     return res['results'][0]['values']['text']
